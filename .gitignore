@@ -1,0 +1,14 @@
+# Ignore virtual environment
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+.idea/
+.vscode/
+
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
