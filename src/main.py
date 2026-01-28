@@ -1,5 +1,5 @@
 from waitress import serve
-from app import ZohidPyApp
+from src.app import ZohidPyApp
 
 
 app = ZohidPyApp()
@@ -14,8 +14,23 @@ def home(request, response):
 @app.route("/about")
 def about(request, response):
     response.text = "Hello from the about page"
+    
+@app.route("/hello/{name}")
+def greeting(request, response, name):
+    response.text = f"hello {name}"
+    
+    
+    
+    
+@app.route("/books")
+class Books:
+    def get(self, request, response):
+        response.text = "Books page"
 
-# Optional: prevent favicon.ico spam
+    def post(self, request, response):
+        response.text = "Endpoint to create a book"
+        
+# prevent favicon.ico spam
 @app.route("/favicon.ico")
 def favicon(request, response):
     response.status = 204  # No Content
