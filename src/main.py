@@ -1,8 +1,8 @@
 from waitress import serve
-from src.app import ZohidPyApp
+from src.app import ZohidPy
 
 
-app = ZohidPyApp()
+app = ZohidPy()
 
 
 # /home

@@ -1,0 +1,2 @@
+[run]
+omit = main.py, ./src/main.py, ./conftest.py, ./test_app.py
