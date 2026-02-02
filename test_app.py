@@ -72,3 +72,14 @@ def test_class_based_method_not_allowed(app, test_client):
     
     
     assert test_client.get("http://testingserver/books").text == "Method Not Allowed"
+    
+
+def test_alternative_route_adding(app, test_client):
+    def new_handler(req, resp):
+        resp.text = "From new handler"
+        
+        
+    app.add_route("/new-handler", new_handler)
+    
+    
+    assert test_client.get("http://testingserver/new-handler").text == "From new handler"
