@@ -4,12 +4,22 @@ from urllib.parse import unquote
 import inspect
 import requests
 import wsgiadapter
+from jinja2 import Environment, FileSystemLoader
+import os
 
 class ZohidPy:
     
-    def __init__(self):
+    def __init__(self, templates_dir="templates"):
         self.routes = {}
         
+        
+        if templates_dir is None:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            templates_dir = os.path.join(base_dir, "..", "templates")
+
+        self.template_env = Environment(
+            loader=FileSystemLoader(os.path.abspath(templates_dir))
+        )
      
     def __call__(self, environ, start_response):
         request = Request(environ)     
@@ -48,14 +58,16 @@ class ZohidPy:
     def default_response(self, response):
         response.status_code = 404
         response.text = "Not Found."
-        
-    def route(self, path):        
+       
+    def add_route(self, path, handler):
         if path in self.routes:
             raise AssertionError(f"Duplicated route {path}. Please change the URL.")
+        self.routes[path] = handler
         
-        
+ 
+    def route(self, path):        
         def wrapper(handler):
-            self.routes[path] = handler
+            self.add_route(path, handler)
             return handler
         
         return wrapper
@@ -65,3 +77,9 @@ class ZohidPy:
         session = requests.Session()
         session.mount('http://testingserver', wsgiadapter.WSGIAdapter(self))
         return session
+    
+    def template(self, template_name, context=None):
+        if context is None:
+            context = {}
+            
+        return self.template_env.get_template(template_name).render(**context).encode()

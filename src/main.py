@@ -29,6 +29,23 @@ class Books:
 
     def post(self, request, response):
         response.text = "Endpoint to create a book"
+
+
+@app.route("/template")
+def template_handler(req, resp):
+      resp.body=app.template(
+          "home.html",
+          context={"new_title":"New Title", "new_body":"New body"}
+      )         
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
 # prevent favicon.ico spam
 @app.route("/favicon.ico")
