@@ -11,11 +11,12 @@ class ZohidPy:
     
     def __init__(self, templates_dir="templates"):
         self.routes = {}
+        self.exception_handler = None
         
         
-        if templates_dir is None:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            templates_dir = os.path.join(base_dir, "..", "templates")
+        # if templates_dir is None:
+        #     base_dir = os.path.dirname(os.path.abspath(__file__))
+        #     templates_dir = os.path.join(base_dir, "..", "templates")
 
         self.template_env = Environment(
             loader=FileSystemLoader(os.path.abspath(templates_dir))
@@ -39,8 +40,14 @@ class ZohidPy:
                     response.status_code = 405
                     response.text = "Method Not Allowed"
                     return response
-                
-            handler(request, response,**kwargs)
+            try:    
+                handler(request, response,**kwargs)
+            except Exception as e:
+                if self.exception_handler is not None:
+                    self.exception_handler(request, response, e)
+                else:
+                    raise
+                    
         else:   
             self.default_response(response)
         
@@ -83,3 +90,6 @@ class ZohidPy:
             context = {}
             
         return self.template_env.get_template(template_name).render(**context).encode()
+    
+    def add_exception_handler(self, handler):
+        self.exception_handler = handler
