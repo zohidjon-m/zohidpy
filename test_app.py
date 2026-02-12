@@ -114,3 +114,12 @@ def test_custom_exception_handler(app, test_client):
     response = test_client.get("http://testingserver/exception")
     
     assert response.text == "Something bad happened"
+    
+
+def test_non_existent_static_file(test_client):
+    assert test_client.get("http://testingserver/nonexsitent.css").status_code == 404
+    
+def test_serving_static_file(test_client):
+    response = test_client.get("http://testingserver/test.css")
+    
+    assert response.text == "body{background-color: chocolate; }"

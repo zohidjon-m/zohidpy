@@ -35,7 +35,7 @@ class Books:
 def template_handler(req, resp):
       resp.body=app.template(
           "home.html",
-          context={"new_title":"New Title", "new_body":"New body"}
+          context={"new_title":"New Title", "new_body":"New body 123"}
       )      
       
       
