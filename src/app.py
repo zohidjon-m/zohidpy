@@ -6,31 +6,31 @@ import requests
 import wsgiadapter
 from jinja2 import Environment, FileSystemLoader
 import os
+from pathlib import Path
 from whitenoise import WhiteNoise
+from .middleware import Middleware
 class ZohidPy:
     
-    def __init__(self, templates_dir="templates", static_dir = "static"):
+    def __init__(self, templates_dir="templates", static_dir = "static", root_dir=None):
         self.routes = {}
         self.exception_handler = None
+        self.middleware = Middleware(self)
         
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        
-        project_root = os.path.normpath(os.path.join(base_dir, ".."))
-        
-        if not os.path.isabs(templates_dir):
-            templates_dir = os.path.join(project_root, templates_dir)
-        if not os.path.isabs(static_dir):
-            static_dir = os.path.join(project_root, static_dir)
+        root = Path(root_dir) if root_dir else Path(__file__).resolve().parent.parent
 
-        templates_dir = os.path.normpath(os.path.abspath(templates_dir))
-        static_dir = os.path.normpath(os.path.abspath(static_dir))
+        templates_path = (Path(templates_dir) if Path(templates_dir).is_absolute() else root / templates_dir).resolve()
+        static_path = (Path(static_dir) if Path(static_dir).is_absolute() else root / static_dir).resolve()
 
-        self.template_env = Environment(loader=FileSystemLoader(templates_dir))
-        self.whitenoise = WhiteNoise(self.wsgi_app, root=static_dir)
-
+        self.template_env = Environment(loader=FileSystemLoader(str(templates_path)))
+        self.whitenoise = WhiteNoise(self.wsgi_app, root=str(static_path), prefix = "/static")
      
     def __call__(self, environ, start_response):
-       return self.whitenoise(environ, start_response)
+        path_info = environ["PATH_INFO"]
+        
+        if path_info.startswith("/static"):
+            return self.whitenoise(environ, start_response)
+        else:
+            return self.middleware(environ, start_response)
     
     def wsgi_app(self, environ, start_response):
         request = Request(environ)     
@@ -103,3 +103,6 @@ class ZohidPy:
     
     def add_exception_handler(self, handler):
         self.exception_handler = handler
+        
+    def add_middleware(self, middleware_cls):
+        self.middleware.add(middleware_cls)

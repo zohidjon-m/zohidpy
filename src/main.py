@@ -1,5 +1,6 @@
 from waitress import serve
 from src.app import ZohidPy
+from src.middleware import Middleware
 
 
 app = ZohidPy()
@@ -50,9 +51,15 @@ app.add_exception_handler(on_exception)
 def exception_throwing_handler():
     raise AttributeError("some exception")
         
+
+class LoggingMiddleware(Middleware):
+    def process_request(self, req):
+        print("request is being called",req.url)
+    
+    def process_response(self, req, resp):
+        print("response has been generated", req.url)
         
-        
-        
+app.add_middleware(LoggingMiddleware)
         
         
         
