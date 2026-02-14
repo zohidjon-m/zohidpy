@@ -151,3 +151,15 @@ def test_middleware_methods_are_called(app, test_client):
     
     assert process_request_called is True
     assert process_response_called is True
+    
+
+def test_allowed_methods_for_functions_based_handlers(app, test_client):
+    
+    @app.route("/home", allowed_methods=["post"])
+    def home(req, resp):
+        resp.text = "Hello from home"
+
+    resp = test_client.get("http://testingserver/home")
+    
+    assert resp.status_code == 405
+    assert resp.text == "Method Not Allowed"

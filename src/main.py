@@ -7,12 +7,12 @@ app = ZohidPy()
 
 
 # /home
-@app.route("/home")
+@app.route("/home", allowed_methods=["get"])
 def home(request, response):
     response.text = "hellp form home page"
 
 # / about
-@app.route("/about")
+@app.route("/about", allowed_methods=["put"])
 def about(request, response):
     response.text = "Hello from the about page"
     
