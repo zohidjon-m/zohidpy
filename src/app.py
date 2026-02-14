@@ -1,4 +1,4 @@
-from webob import Request, Response
+from webob import Request
 from parse import parse
 from urllib.parse import unquote
 import inspect
@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 from whitenoise import WhiteNoise
 from .middleware import Middleware
+from .response import Response
 class ZohidPy:
     
     def __init__(self, templates_dir="templates", static_dir = "static", root_dir=None):
@@ -71,6 +72,9 @@ class ZohidPy:
             self.default_response(response)
         
         return response
+    
+    
+    
     def method_not_allowed_response(self, response):
         response.status_code = 405
         response.text = "Method Not Allowed"
@@ -116,7 +120,7 @@ class ZohidPy:
         if context is None:
             context = {}
             
-        return self.template_env.get_template(template_name).render(**context).encode()
+        return self.template_env.get_template(template_name).render(**context)
     
     def add_exception_handler(self, handler):
         self.exception_handler = handler

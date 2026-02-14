@@ -12,17 +12,14 @@ def home(request, response):
     response.text = "hellp form home page"
 
 # / about
-@app.route("/about", allowed_methods=["put"])
+@app.route("/about", allowed_methods=["get"])
 def about(request, response):
     response.text = "Hello from the about page"
     
 @app.route("/hello/{name}")
 def greeting(request, response, name):
     response.text = f"hello {name}"
-    
-    
-    
-    
+        
 @app.route("/books")
 class Books:
     def get(self, request, response):
@@ -34,12 +31,16 @@ class Books:
 
 @app.route("/template")
 def template_handler(req, resp):
-      resp.body=app.template(
+      resp.html=app.template(
           "home.html",
           context={"new_title":"New Title", "new_body":"New body 123"}
       )      
       
-      
+@app.route("/json")
+def json_handler(req, resp):
+    response_data = {"name":"some_name","type":"json"}
+    resp.json = response_data    
+    
       
 def on_exception(req, resp, exc):
     resp.text = str(exc)
@@ -60,7 +61,6 @@ class LoggingMiddleware(Middleware):
         print("response has been generated", req.url)
         
 app.add_middleware(LoggingMiddleware)
-        
         
         
         
