@@ -1,5 +1,5 @@
 import pytest
-from src.middleware import Middleware
+from zohidpy.middleware import Middleware
 
 
 

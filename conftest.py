@@ -1,5 +1,5 @@
 import pytest
-from src.app import ZohidPy
+from zohidpy.app import ZohidPy
 
 @pytest.fixture
 def app():

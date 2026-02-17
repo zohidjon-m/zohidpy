@@ -25,4 +25,4 @@ class Middleware:
     def __call__(self, environ, start_response):
         request = Request(environ)
         response = self.app.handle_request(request)
-        return response(environ, start_response)
+        return response(environ, start_response) 
