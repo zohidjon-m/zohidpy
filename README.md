@@ -2,11 +2,11 @@
 
 [![PyPI
 version](https://img.shields.io/pypi/v/zohidpy.svg)](https://pypi.org/project/zohidpy/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache-blue.svg)](LICENSE)
 ![purpose](https://img.shields.io/badge/purpose-learning-green)
 
 
-> A minimal WSGI web framework built from scratch to understand how web
+> A lightweight WSGI web framework built from scratch to understand how web
 frameworks work internally.
 
 ZohidPy is intentionally small and explicit.\
